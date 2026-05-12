@@ -58,7 +58,7 @@ defmodule PasseurHass.Tools.HassGetEntityState do
     state_value = Map.get(state, "state", "")
     last_changed = Map.get(state, "last_changed", "")
     last_updated = Map.get(state, "last_updated", "")
-    attrs = Map.get(state, "attributes", %{})
+    attrs = Map.get(state, "attributes") || %{}
 
     header = "# #{entity_id}\n\n"
 

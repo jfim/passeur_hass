@@ -69,7 +69,7 @@ defmodule PasseurHass.Tools.HassSearchEntities do
 
   defp matches?(%{} = s, needle) do
     entity_id = Map.get(s, "entity_id", "") |> String.downcase()
-    friendly = s |> Map.get("attributes", %{}) |> Map.get("friendly_name", "") |> to_string() |> String.downcase()
+    friendly = (Map.get(s, "attributes") || %{}) |> Map.get("friendly_name", "") |> to_string() |> String.downcase()
     String.contains?(entity_id, needle) or String.contains?(friendly, needle)
   end
 
@@ -94,7 +94,7 @@ defmodule PasseurHass.Tools.HassSearchEntities do
 
   defp format_row(%{} = s) do
     entity_id = Map.get(s, "entity_id", "")
-    attrs = Map.get(s, "attributes", %{})
+    attrs = Map.get(s, "attributes") || %{}
     friendly = Map.get(attrs, "friendly_name", "") |> escape_cell()
     state = Map.get(s, "state", "") |> escape_cell()
     unit = Map.get(attrs, "unit_of_measurement", "") |> escape_cell()

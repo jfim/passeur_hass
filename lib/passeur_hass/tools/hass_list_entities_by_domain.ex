@@ -70,7 +70,7 @@ defmodule PasseurHass.Tools.HassListEntitiesByDomain do
 
   defp format_row(%{} = s) do
     entity_id = Map.get(s, "entity_id", "")
-    attrs = Map.get(s, "attributes", %{})
+    attrs = Map.get(s, "attributes") || %{}
     friendly = Map.get(attrs, "friendly_name", "") |> escape_cell()
     state = Map.get(s, "state", "") |> escape_cell()
     unit = Map.get(attrs, "unit_of_measurement", "") |> escape_cell()
