@@ -47,21 +47,25 @@ defmodule PasseurHass.Tools.HassSearchEntities do
   end
 
   defp do_search(query, limit) do
-    with {:ok, states} <- PasseurHass.HTTP.get_json("/api/states") do
-      needle = String.downcase(query)
+    case PasseurHass.HTTP.get_json("/api/states") do
+      {:ok, states} ->
+        needle = String.downcase(query)
 
-      matched =
-        states
-        |> Enum.filter(&matches?(&1, needle))
-        |> Enum.sort_by(fn s -> Map.get(s, "entity_id", "") end)
+        matched =
+          states
+          |> Enum.filter(&matches?(&1, needle))
+          |> Enum.sort_by(fn s -> Map.get(s, "entity_id", "") end)
 
-      total = length(matched)
-      shown = Enum.take(matched, limit)
+        total = length(matched)
+        shown = Enum.take(matched, limit)
 
-      {:ok, format_table(query, shown, total, limit)}
-    else
-      {:error, :not_found} -> {:error, "Home Assistant returned 404 for /api/states"}
-      other -> other
+        {:ok, format_table(query, shown, total, limit)}
+
+      {:error, :not_found} ->
+        {:error, "Home Assistant returned 404 for /api/states"}
+
+      other ->
+        other
     end
   rescue
     e -> {:error, "#{inspect(e.__struct__)}: #{Exception.message(e)}"}

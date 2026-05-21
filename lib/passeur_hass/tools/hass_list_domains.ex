@@ -39,20 +39,23 @@ defmodule PasseurHass.Tools.HassListDomains do
   end
 
   defp do_list do
-    with {:ok, states} <- PasseurHass.HTTP.get_json("/api/states") do
-      counts =
-        states
-        |> Enum.reduce(%{}, fn s, acc ->
-          case Map.get(s, "entity_id", "") |> String.split(".", parts: 2) do
-            [domain, _] -> Map.update(acc, domain, 1, &(&1 + 1))
-            _ -> acc
-          end
-        end)
+    case PasseurHass.HTTP.get_json("/api/states") do
+      {:ok, states} ->
+        counts =
+          Enum.reduce(states, %{}, fn s, acc ->
+            case Map.get(s, "entity_id", "") |> String.split(".", parts: 2) do
+              [domain, _] -> Map.update(acc, domain, 1, &(&1 + 1))
+              _ -> acc
+            end
+          end)
 
-      {:ok, format_table(counts)}
-    else
-      {:error, :not_found} -> {:error, "Home Assistant returned 404 for /api/states"}
-      other -> other
+        {:ok, format_table(counts)}
+
+      {:error, :not_found} ->
+        {:error, "Home Assistant returned 404 for /api/states"}
+
+      other ->
+        other
     end
   rescue
     e -> {:error, "#{inspect(e.__struct__)}: #{Exception.message(e)}"}

@@ -42,18 +42,22 @@ defmodule PasseurHass.Tools.HassListEntitiesByDomain do
   end
 
   defp do_list(domain) do
-    with {:ok, states} <- PasseurHass.HTTP.get_json("/api/states") do
-      prefix = domain <> "."
+    case PasseurHass.HTTP.get_json("/api/states") do
+      {:ok, states} ->
+        prefix = domain <> "."
 
-      matches =
-        states
-        |> Enum.filter(fn s -> String.starts_with?(Map.get(s, "entity_id", ""), prefix) end)
-        |> Enum.sort_by(fn s -> Map.get(s, "entity_id", "") end)
+        matches =
+          states
+          |> Enum.filter(fn s -> String.starts_with?(Map.get(s, "entity_id", ""), prefix) end)
+          |> Enum.sort_by(fn s -> Map.get(s, "entity_id", "") end)
 
-      {:ok, format_table(domain, matches)}
-    else
-      {:error, :not_found} -> {:error, "Home Assistant returned 404 for /api/states"}
-      other -> other
+        {:ok, format_table(domain, matches)}
+
+      {:error, :not_found} ->
+        {:error, "Home Assistant returned 404 for /api/states"}
+
+      other ->
+        other
     end
   rescue
     e -> {:error, "#{inspect(e.__struct__)}: #{Exception.message(e)}"}
