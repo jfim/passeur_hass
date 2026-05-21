@@ -5,7 +5,7 @@ defmodule PasseurHass.HTTP do
   @user_agent "PasseurHass/0.1"
 
   @spec get_json(String.t(), [{String.t(), String.t()}]) ::
-          {:ok, map() | list()} | {:error, String.t()}
+          {:ok, map() | list()} | {:error, :not_found | String.t()}
   def get_json(path, query_params \\ []) do
     with {:ok, base} <- hass_base(),
          {:ok, token} <- hass_token() do
@@ -62,8 +62,6 @@ defmodule PasseurHass.HTTP do
     trimmed = body |> String.trim() |> String.slice(0, 200)
     if trimmed == "", do: "", else: ": #{trimmed}"
   end
-
-  defp body_snippet(_), do: ""
 
   defp build_url(base, []), do: base
   defp build_url(base, params), do: base <> "?" <> URI.encode_query(params)
