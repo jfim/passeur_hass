@@ -33,7 +33,9 @@ defmodule PasseurHass.MixProject do
       {:anubis_mcp, git: "https://github.com/jfim/anubis-mcp.git", branch: "non-upstreamed-fixes", override: true},
       {:finch, "~> 0.18"},
       {:jason, "~> 1.4"},
-      {:ex_doc, "~> 0.35", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.35", only: :dev, runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 end
