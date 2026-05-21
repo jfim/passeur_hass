@@ -69,7 +69,13 @@ defmodule PasseurHass.Tools.HassSearchEntities do
 
   defp matches?(%{} = s, needle) do
     entity_id = Map.get(s, "entity_id", "") |> String.downcase()
-    friendly = (Map.get(s, "attributes") || %{}) |> Map.get("friendly_name", "") |> to_string() |> String.downcase()
+
+    friendly =
+      (Map.get(s, "attributes") || %{})
+      |> Map.get("friendly_name", "")
+      |> to_string()
+      |> String.downcase()
+
     String.contains?(entity_id, needle) or String.contains?(friendly, needle)
   end
 
@@ -80,7 +86,7 @@ defmodule PasseurHass.Tools.HassSearchEntities do
   defp format_table(query, entities, total, limit) do
     header = "# Search Results for: #{query}\n\n"
     table_header = "| entity_id | friendly_name | state | unit |\n|---|---|---|---|\n"
-    rows = entities |> Enum.map(&format_row/1) |> Enum.join("\n")
+    rows = Enum.map_join(entities, "\n", &format_row/1)
 
     footer =
       if total > limit do

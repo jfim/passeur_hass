@@ -66,7 +66,7 @@ defmodule PasseurHass.Tools.HassListDomains do
     sorted = counts |> Enum.sort_by(fn {_d, c} -> -c end)
     header = "# Domains (#{map_size(counts)})\n\n"
     table_header = "| domain | count |\n|---|---|\n"
-    rows = sorted |> Enum.map(fn {d, c} -> "| #{d} | #{c} |" end) |> Enum.join("\n")
+    rows = Enum.map_join(sorted, "\n", fn {d, c} -> "| #{d} | #{c} |" end)
     header <> table_header <> rows <> "\n"
   end
 end

@@ -1,4 +1,5 @@
 defmodule PasseurHass.Application do
+  @moduledoc false
   use Application
 
   @impl true

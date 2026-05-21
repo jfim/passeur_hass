@@ -7,9 +7,7 @@ defmodule PasseurHass.Tools.HassGetEntityState do
   @overall_timeout_ms 30_000
 
   schema do
-    field(:entity_id, {:required, :string},
-      description: "Entity ID, e.g. \"sensor.outside_aqi\""
-    )
+    field(:entity_id, {:required, :string}, description: "Entity ID, e.g. \"sensor.outside_aqi\"")
   end
 
   @impl true
@@ -77,8 +75,7 @@ defmodule PasseurHass.Tools.HassGetEntityState do
           rows =
             attrs
             |> Enum.sort_by(fn {k, _} -> k end)
-            |> Enum.map(fn {k, v} -> "- **#{k}**: #{format_value(v)}" end)
-            |> Enum.join("\n")
+            |> Enum.map_join("\n", fn {k, v} -> "- **#{k}**: #{format_value(v)}" end)
 
           "\n## Attributes\n\n" <> rows <> "\n"
       end

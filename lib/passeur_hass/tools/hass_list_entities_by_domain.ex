@@ -64,7 +64,7 @@ defmodule PasseurHass.Tools.HassListEntitiesByDomain do
   defp format_table(domain, entities) do
     header = "# Entities in domain: #{domain}\n\n"
     table_header = "| entity_id | friendly_name | state | unit |\n|---|---|---|---|\n"
-    rows = entities |> Enum.map(&format_row/1) |> Enum.join("\n")
+    rows = Enum.map_join(entities, "\n", &format_row/1)
     header <> table_header <> rows <> "\n"
   end
 
